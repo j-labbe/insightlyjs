@@ -112,17 +112,13 @@ class InsightlyHTTPRequest {
                     switch (xmlHttp.status) {
                         // TODO: decide whether to return false or reject the promise
                         case 400:
-                            console.error('InsightlyJS Error: 400 - Often missing or invalid parameter(s)');
-                            return false;
+                            throw new Error('InsightlyJS Error: 400 - Often missing or invalid parameter(s)');
                         case 401:
-                            console.error('InsightlyJS Error: 401 - Authentication failed');
-                            return false;
+                            throw new Error('InsightlyJS Error: 401 - Authentication failed');
                         case 404:
-                            console.error('InsightlyJS Error: 404 - Resource not found');
-                            return false;
+                            throw new Error('InsightlyJS Error: 404 - Resource not found');
                         case 417:
-                            console.error('InsightlyJS Error: 417 - Delete failed');
-                            return false;
+                            throw new Error('InsightlyJS Error: 417 - Delete failed');
                         default:
                             return Promise.reject(new Error('InsightlyJS Error: ' + xmlHttp.status + ' - ' + xmlHttp.statusText));
                     }
