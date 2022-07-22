@@ -1,7 +1,7 @@
 {
   "name": "insightlyjs",
   "version": "1.0.0",
-  "description": "JS/TS Insightly API wrapper",
+  "description": "JS/TS Insightly SDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
