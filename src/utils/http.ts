@@ -1,0 +1,60 @@
+import Base64 from "./base64";
+
+class InsightlyHTTPRequest {
+    private readonly baseUrl: string;
+    private readonly apiKey: string;
+
+    constructor(apiKey: string) {
+        this.baseUrl = "https://api.na1.insightly.com/3.1";
+        
+        /**
+         * The Insightly API key must be passed in to the constructor
+         * 
+         * Insightly requires the api key to be encoded in base64 when sent in the Authorization header
+         */
+        this.apiKey = Base64.encode(apiKey);
+    }
+
+    /**
+     * @param path The path to the endpoint. Can either omit or include the base "/"
+     * @returns Data from the endpoint
+     */
+    public async get(path: string): Promise<any> {
+
+        if (path.charAt(0) === "/") {
+            path = path.substring(1);
+        }
+        
+        const xmlHttp = new XMLHttpRequest();
+        // Basic Authorization is the only way of authentication for Insightly
+        xmlHttp.setRequestHeader("Authorization", `Basic ${this.apiKey}`);
+        
+        // Insightly requires Accepts-Encoding to be set to gzip
+        xmlHttp.setRequestHeader("Accepts-Encoding", "gzip");
+
+        // If 
+        xmlHttp.onreadystatechange = () => {
+            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+                return Promise.resolve(xmlHttp.response);
+            } else {
+                if (xmlHttp.readyState === 4) {
+                    switch(xmlHttp.status) {
+                        case 400:
+                            return Promise.reject(new Error("InsightlyJS Error: 400 - Often missing or invalid parameter(s)"));
+                        case 401:
+                            return Promise.reject(new Error("InsightlyJS Error: 401 - Authentication failed"));
+                        case 404:
+                            return Promise.reject(new Error("InsightlyJS Error: 404 - Resource not found"));
+                        default:
+                            return Promise.reject(new Error("InsightlyJS Error: " + xmlHttp.status + " - " + xmlHttp.statusText));
+                    }
+                }
+            }
+        }
+        // Send the request asynchronously
+        xmlHttp.open("GET", `${this.baseUrl}${path}`, false);
+        xmlHttp.send(null);
+    }
+}
+
+export default InsightlyHTTPRequest;
