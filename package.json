@@ -1,6 +1,6 @@
 {
   "name": "insightlyjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "JS/TS Insightly SDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -21,7 +21,7 @@
   },
   "keywords": ["insightly", "api", "wrapper", "js", "typescript"],
   "author": "j-labbe",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/j-labbe/insightlyjs/issues"
   },
