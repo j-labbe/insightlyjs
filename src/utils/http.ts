@@ -52,7 +52,7 @@ class InsightlyHTTPRequest {
             }
         }
         // Send the request asynchronously
-        xmlHttp.open("GET", `${this.baseUrl}${path}`, false);
+        xmlHttp.open("GET", `${this.baseUrl}/${path}`, false);
         xmlHttp.send(null);
     }
 }
