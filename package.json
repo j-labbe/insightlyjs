@@ -19,7 +19,13 @@
     "type": "git",
     "url": "git+https://github.com/j-labbe/insightlyjs.git"
   },
-  "keywords": ["insightly", "api", "wrapper", "js", "typescript"],
+  "keywords": [
+    "insightly",
+    "api",
+    "wrapper",
+    "js",
+    "typescript"
+  ],
   "author": "j-labbe",
   "license": "MIT",
   "bugs": {
@@ -28,6 +34,7 @@
   "homepage": "https://github.com/j-labbe/insightlyjs#readme",
   "devDependencies": {
     "@types/jest": "^28.1.6",
+    "@types/node": "^18.0.6",
     "jest": "^28.1.3",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.7",
