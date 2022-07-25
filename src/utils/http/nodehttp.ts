@@ -1,4 +1,45 @@
+import { IncomingMessage } from 'http';
 const https = require('https');
+
+interface NodeHttpOptions {
+    host: string;
+    path: string;
+    method: string;
+    headers: {
+        Authorization: string;
+        'Accepts-Encoding': string;
+    };
+}
+
+function request(options: NodeHttpOptions, data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res: IncomingMessage) => {
+            let body: any = '',
+                statusCode = res.statusCode || 500; // will reject if not explicitly set as OK
+
+            res.on('data', (chunk: any) => {
+                body += chunk;
+            })
+                .on('end', () => {
+                    if (statusCode >= 200 && statusCode < 300) {
+                        return resolve(JSON.parse(body));
+                    } else {
+                        return reject(JSON.parse(body));
+                    }
+                })
+                .on('error', (err: any) => {
+                    return reject(err);
+                })
+                .on('timeout', () => {
+                    return reject(new Error('Timeout'));
+                })
+        });
+        if (data) {
+            req.write(data);
+        }
+        req.end();
+    });
+}
 
 const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 
@@ -17,14 +58,15 @@ async function nodeHttpRequest(apiKey: string, baseUrl: string, path: string, me
         baseUrl = baseUrl.substring(0, baseUrl.length - 1);
     }
 
+    baseUrl = baseUrl.replace(/(^\w+:|^)\/\//, '');
+
     if (path.charAt(0) === '/') {
         path = path.substring(1);
     }
 
     const options = {
-        hostname: baseUrl,
-        port: 443,
-        path: `/${path}`,
+        host: baseUrl,
+        path: `/v3.1/${path}`,
         method: method,
         headers: {
             Authorization: `Basic ${apiKey}`,
@@ -32,9 +74,9 @@ async function nodeHttpRequest(apiKey: string, baseUrl: string, path: string, me
         },
     };
 
-    const response = await https.request(options);
+    const response = await request(options, data);
 
-    return response.body;
+    return response;
 }
 
 async function get(apiKey: string, baseUrl: string, path: string): Promise<any> {
