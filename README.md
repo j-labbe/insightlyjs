@@ -42,8 +42,8 @@ const contact = await insightly.getContact(12345);
 ## Completed modules
 
 -   [x] Activity Sets
--   [ ] **Comments** (in progress)
--   [ ] Contacts
+-   [x] Comments *(needs testing)*
+-   [ ] __Contacts (in progress)__
 -   [ ] Countries
 -   [ ] Currencies
 -   [ ] Custom Fields
