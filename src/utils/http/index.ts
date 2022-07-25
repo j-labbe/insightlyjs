@@ -8,8 +8,8 @@ class InsightlyHTTPRequest {
     private readonly apiKey: string;
     private readonly runningOnNode: boolean;
 
-    constructor(apiKey: string) {
-        this.baseUrl = 'https://api.na1.insightly.com/3.1';
+    constructor(apiKey: string, baseUrl: string) {
+        this.baseUrl = baseUrl;
 
         /**
          * The Insightly API key must be passed in to the constructor
@@ -24,6 +24,9 @@ class InsightlyHTTPRequest {
          * load the appropriate method based on the environment.
          */
         this.runningOnNode = isNode();
+        
+        // jest - testxmlhttp
+        // this.runningOnNode = false;
     }
 
     async get (path: string): Promise<any> {
