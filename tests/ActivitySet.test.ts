@@ -26,11 +26,11 @@ describe('ActivitySet', () => {
 
     describe('getActivitySetList', () => {
         it('should be defined', () => {
-            expect(insightly.getActivitySetList).toBeDefined();
+            expect(insightly.activitySets.getActivitySetList).toBeDefined();
         });
 
         it('should return a list of activity sets', async () => {
-            const activitySets = await insightly.getActivitySetList();
+            const activitySets = await insightly.activitySets.getActivitySetList();
             expect(activitySets).toBeDefined();
             expect(activitySets.length).toBeGreaterThan(0);
             activitySetId = activitySets[0].ACTIVITYSET_ID;
@@ -39,11 +39,11 @@ describe('ActivitySet', () => {
 
     describe("getActivitySet", () => {
         it("should be defined", () => {
-            expect(insightly.getActivitySet).toBeDefined();
+            expect(insightly.activitySets.getActivitySet).toBeDefined();
         });
 
         it("should return an activity set", async () => {
-            const activitySet = await insightly.getActivitySet(activitySetId);
+            const activitySet = await insightly.activitySets.getActivitySet(activitySetId);
             expect(activitySet).toBeDefined();
             expect(typeof activitySet).toBe('object');
         });
