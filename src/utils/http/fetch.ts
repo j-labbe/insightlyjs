@@ -1,7 +1,7 @@
 async function baseFetch(url: string, options: any): Promise<any> {
-    return fetch(url, options).then(function (response) {
+    return await fetch(url, options).then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
-            return response;
+            return await response.json();
         } else {
             throw new Error(response.statusText);
         }

@@ -37,15 +37,15 @@ describe('ActivitySet', () => {
         });
     });
 
-    // describe("getActivitySet", () => {
-    //     it("should be defined", () => {
-    //         expect(insightly.getActivitySet).toBeDefined();
-    //     });
+    describe("getActivitySet", () => {
+        it("should be defined", () => {
+            expect(insightly.getActivitySet).toBeDefined();
+        });
 
-    //     it("should return an activity set", async () => {
-    //         const activitySet = await insightly.getActivitySet(activitySetId);
-    //         expect(activitySet).toBeDefined();
-    //         expect(typeof activitySet).toBe('object');
-    //     });
-    // });
+        it("should return an activity set", async () => {
+            const activitySet = await insightly.getActivitySet(activitySetId);
+            expect(activitySet).toBeDefined();
+            expect(typeof activitySet).toBe('object');
+        });
+    });
 });
