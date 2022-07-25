@@ -1,5 +1,5 @@
 import { ActivitySet, Activity } from './types/ActivitySet';
-
+import runtimeIsCompatible from './utils/runtimeIsCompatible';
 import * as ActivitySets from './ActivitySets';
 
 // TODO: add ISO 8601 date format validation
@@ -11,6 +11,11 @@ class InsightlyJS {
     constructor(options: { apiKey: string; apiHost: string }) {
         this.apiKey = options.apiKey;
         this.apiUrl = options.apiHost;
+        
+        if (!runtimeIsCompatible()) {
+            throw new Error('InsightlyJS is not compatible with this runtime. Please ugrade your browser or Node version (18+).');
+        }
+
     }
 
     /**************************************************************************
