@@ -6,8 +6,11 @@ import * as ActivitySets from './ActivitySets';
 
 class InsightlyJS {
     private readonly apiKey: string;
-    constructor(apiKey: string) {
-        this.apiKey = apiKey;
+    private readonly apiUrl: string;
+
+    constructor(options: { apiKey: string; apiHost: string }) {
+        this.apiKey = options.apiKey;
+        this.apiUrl = options.apiHost;
     }
 
     /**************************************************************************
@@ -24,7 +27,7 @@ class InsightlyJS {
      * @see https://api.insightly.com/v3.1/Help#!/ActivitySets/GetActivitySets
      */
     public async getActivitySetList(brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<ActivitySet[]> {
-        return await ActivitySets.getActivitySetList(this.apiKey, brief, skip, top, countTotal);
+        return await ActivitySets.getActivitySetList(this.apiKey, this.apiUrl, brief, skip, top, countTotal);
     }
 
     /**
@@ -32,17 +35,14 @@ class InsightlyJS {
      * @see https://api.insightly.com/v3.1/Help#!/ActivitySets/GetActivitySet
      */
     public async getActivitySet(id: number): Promise<ActivitySet> {
-        return await ActivitySets.getActivitySet(this.apiKey, id);
+        return await ActivitySets.getActivitySet(this.apiKey, this.apiUrl, id);
     }
-
 
     /**************************************************************************
      **************************************************************************
      * Comments
      **************************************************************************
      *************************************************************************/
-
-     
 }
 
 export default InsightlyJS;
