@@ -6,6 +6,14 @@ class InsightlyHTTPRequest {
     private readonly apiKey: string;
 
     constructor(apiKey: string, baseUrl: string) {
+        if (!apiKey) {
+            throw new Error('API key is required');
+        }
+
+        if (!baseUrl) {
+            throw new Error('Base URL is required');
+        }
+
         this.baseUrl = baseUrl;
 
         /**
@@ -16,22 +24,21 @@ class InsightlyHTTPRequest {
         this.apiKey = Base64.encode(apiKey);
     }
 
-    async get (path: string): Promise<any> {
+    async get(path: string): Promise<any> {
         return await fetch.get(this.apiKey, this.baseUrl, path);
     }
 
-    async put (path: string, data: any): Promise<any> {
+    async put(path: string, data: any): Promise<any> {
         return await fetch.put(this.apiKey, this.baseUrl, path, data);
     }
 
-    async post (path: string, data: any): Promise<any> {
+    async post(path: string, data: any): Promise<any> {
         return await fetch.post(this.apiKey, this.baseUrl, path, data);
     }
 
-    async delete (path: string): Promise<any> {
+    async delete(path: string): Promise<any> {
         return await fetch.del(this.apiKey, this.baseUrl, path);
     }
-    
 }
 
 export default InsightlyHTTPRequest;
