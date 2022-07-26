@@ -2,17 +2,17 @@
 
 ## This package is under development. It is not yet ready for use.
 
-insightlyjs is a zero-dependancy JavaScript / TypeScript library for the Insightly API v3.1.
+insightlyjs is a lightweight JavaScript / TypeScript library for the Insightly API v3.1.
 
-The goal of InsightlyJS is to provide a lightweight, simple, and intuitive SDK for the Insightly API.
+The goal of InsightlyJS is to provide a simple and intuitive SDK for the Insightly API.
 
 ## Prerequisites
-### Node v18.0.0 or higher is __required__.
-InsightlyJS makes use of the fetch API, which is availble in Node v18.0.0 and higher.
+### Node v18.0.0 or higher is recommended.
+### [Compatible browsers are recommended.](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API#browser_compatibility)
 
-If you are using this package in a browser, you will need to use a [compatible browser version](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API#browser_compatibility).
+The fetch API will be polyfilled if it is not available.
 
-InsightlyJS will throw an error if you are using an unsupported runtime environment.
+InsightlyJS will throw an error if you are using an unsupported runtime environment and is unable to polyfill.
 
 ## Installation
 
@@ -29,7 +29,7 @@ const insightly = new InsightlyJS({
     apiKey: '<your-api-key>',
 
     // can either include or omit protocol
-    apiHost: 'api.<pod>.insightly.com',
+    apiUrl: 'api.<pod>.insightly.com',
 });
 
 // Example: get all contacts from Insightly
