@@ -1,1 +1,2 @@
-// Hello, world!
+import InsightlyJS from "./InsightlyJS";
+export default InsightlyJS;
