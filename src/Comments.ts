@@ -1,19 +1,29 @@
-import InsightlyHTTPRequest from "./utils/http";
-import { FileAttachment, Comment } from "./types/Comments";
+import InsightlyHTTPRequest from './utils/http';
+import { FileAttachment, Comment } from './types';
+import buildUrlParams from './utils/buildUrlParams';
 
 /**
  * These need to be tested. As of now I (j-labbe) only have time to test GET requests.
- * 
+ *
  * I am using this package in a project that only needs read access, so either myself or
  * someone else can come back here and test / fix non-GET requests.
  */
 
-async function getFileAttachments(apiKey: string, apiUrl: string, id: number, updatedAfterUtc?: string, skip?: number, top?: number, countTotal?: boolean): Promise<FileAttachment[]> {
+async function getFileAttachments(
+    apiKey: string,
+    apiUrl: string,
+    id: number,
+    updatedAfterUtc?: string,
+    skip?: number,
+    top?: number,
+    countTotal?: boolean,
+): Promise<FileAttachment[]> {
     const request = new InsightlyHTTPRequest(apiKey, apiUrl);
 
-    countTotal = !!countTotal;
+    const urlParams = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal });
 
-    return await request.get(`/Comments/${id}/FileAttachments?${updatedAfterUtc ? `updated_after_utc=${updatedAfterUtc}` : ``}${skip ? `&skip=${skip}` : ``}${top ? `&top=${top}` : ``}&count_total=${countTotal}`);
+    //prettier-ignore
+    return await request.get(`/Comments/${id}/FileAttachments?${urlParams}`);
 }
 
 async function addFileAttachment(apiKey: string, apiUrl: string, id: number, fileAttachment: FileAttachment): Promise<FileAttachment> {
