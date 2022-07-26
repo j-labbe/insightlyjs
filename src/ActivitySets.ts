@@ -1,18 +1,21 @@
 import InsightlyHTTPRequest from './utils/http';
-import { ActivitySet } from './types/ActivitySet';
+import { ActivitySet } from './types';
+import buildUrlParams from './utils/buildUrlParams';
 
-async function getActivitySetList(apiKey: string, apiUrl: string, brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<ActivitySet[]> {
-    brief = !!brief;
-
-    // skip and top will be removed from the url if falsy
-    const skipVal = !!skip;
-    const topVal = !!top;
-
-    countTotal = !!countTotal
-
+async function getActivitySetList(
+    apiKey: string,
+    apiUrl: string,
+    brief?: boolean,
+    skip?: number,
+    top?: number,
+    countTotal?: boolean,
+): Promise<ActivitySet[]> {
+    console.log('getActivitySetList', apiKey, apiUrl);
     const request = new InsightlyHTTPRequest(apiKey, apiUrl);
 
-    return await request.get(`/ActivitySets?brief=${brief}${skipVal ? `&skip=${skip}` : ``}${topVal ? `&top=${top}` : ``}&countTotal=${countTotal}`);
+    const urlParams = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: !!countTotal });
+
+    return await request.get(`/ActivitySets${urlParams}`);
 }
 
 async function getActivitySet(apiKey: string, apiUrl: string, id: number): Promise<ActivitySet> {
