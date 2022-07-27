@@ -22,7 +22,7 @@ async function getFileAttachments(
 
     const urlParams = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal });
 
-    //prettier-ignore
+    // prettier-ignore
     return await request.get(`/Comments/${id}/FileAttachments?${urlParams}`);
 }
 

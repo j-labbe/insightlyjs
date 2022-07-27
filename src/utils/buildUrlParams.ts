@@ -15,8 +15,8 @@ function buildUrlParams(...params: UrlParam[]): string {
     // filter out falsy values from the array of UrlParam[]
     const filteredParams = params.filter((param: UrlParam) => {
         // there is only one key-value pair in the object
-        let key: any = Object.keys(param)[0];
-        let value: any = param[key];
+        const key: any = Object.keys(param)[0];
+        const value: any = param[key];
 
         if (key === 'undefined' || key === 'null' || key === 'NaN' || key === 'false' || (!key && key !== 0 && key !== false)) {
             return false;

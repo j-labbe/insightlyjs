@@ -1,6 +1,6 @@
 {
   "name": "insightlyjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JS/TS Insightly SDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -49,7 +49,6 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "node-fetch": "^3.2.9",
-    "whatwg-fetch": "^3.6.2"
+    "node-fetch": "^3.2.9"
   }
 }

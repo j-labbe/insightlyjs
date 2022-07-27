@@ -2,13 +2,12 @@
 
 ## This package is under development. It is not yet ready for use.
 
-insightlyjs is a lightweight JavaScript / TypeScript library for the Insightly API v3.1.
+insightlyjs is a lightweight __Node.js__ library for the Insightly API v3.1.
 
-The goal of InsightlyJS is to provide a simple and intuitive SDK for the Insightly API.
+The goal of InsightlyJS is to provide a simple and intuitive way to interact with the Insightly API.
 
 ## Prerequisites
 ### Node v18.0.0 or higher is recommended.
-### [Compatible browsers are recommended.](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API#browser_compatibility)
 
 The fetch API will be polyfilled if it is not available.
 
