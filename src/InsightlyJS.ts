@@ -2,6 +2,7 @@ import { ActivitySet, FileAttachment, Comment } from './types';
 import runtimeIsCompatible from './utils/runtimeIsCompatible';
 import * as ActivitySets from './ActivitySets';
 import * as Comments from './Comments';
+import * as Contacts from './Contacts';
 
 // TODO: add ISO 8601 date format validation
 
@@ -45,14 +46,14 @@ class InsightlyJS {
      *************************************************************************/
 
     /**
-     * @param brief Only return the top level properties of the ActivitySet
-     * @param skip Number of ActivitySets to skip
-     * @param top Maximum number of ActivitySets to return
-     * @param countTotal Return the total number of ActivitySets
+     * @param options.brief Only return the top level properties of the ActivitySet
+     * @param options.skip Number of ActivitySets to skip
+     * @param options.top Maximum number of ActivitySets to return
+     * @param options.countTotal Return the total number of ActivitySets
      * @see https://api.insightly.com/v3.1/Help#!/ActivitySets/GetActivitySets
      */
-    public async getActivitySetList(brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<ActivitySet[]> {
-        return await ActivitySets.getActivitySetList(this.apiKey, this.apiUrl, brief, skip, top, countTotal);
+    public async getActivitySetList(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }): Promise<ActivitySet[]> {
+        return await ActivitySets.getActivitySetList(this.apiKey, this.apiUrl, options?.brief, options?.skip, options?.top, options?.countTotal);
     }
 
     /**
@@ -63,28 +64,35 @@ class InsightlyJS {
         return await ActivitySets.getActivitySet(this.apiKey, this.apiUrl, id);
     }
 
-    /**************************************************************************
-     **************************************************************************
-     * Comments
-     **************************************************************************
-     *************************************************************************/
-
     /**
-     * @param id The ID of the Comment
-     * @param updatedAfterUtc Earliest date when the file attachment was last updated
-     * @param skip Number of file attachments to skip
-     * @param top Maximum number of file attachments to return
-     * @param countTotal Return the total number of records
-     * @see https://api.insightly.com/v3.1/Help#!/Comments/GetFileAttachments
+     * ************************************************************************
+     * *************************************************************************
+     * Comments
+     * *************************************************************************
+     * ***********************************************************************
+     * @param options.id The ID of the Comment
+     * @param options.updatedAfterUtc Earliest date when the file attachment was last updated
+     * @param options.skip Number of file attachments to skip
+     * @param options.top Maximum number of file attachments to return
+     * @param options.countTotal Return the total number of records
+     * @see {https} ://api.insightly.com/v3.1/Help#!/Comments/GetFileAttachments
      */
-    public async getCommentFileAttachments(
-        id: number,
-        updatedAfterUtc?: string,
-        skip?: number,
-        top?: number,
-        countTotal?: boolean,
-    ): Promise<FileAttachment[]> {
-        return await Comments.getFileAttachments(this.apiKey, this.apiUrl, id, updatedAfterUtc, skip, top, countTotal);
+    public async getCommentFileAttachments(options: {
+        id: number;
+        updatedAfterUtc?: string;
+        skip?: number;
+        top?: number;
+        countTotal?: boolean;
+    }): Promise<FileAttachment[]> {
+        return await Comments.getFileAttachments(
+            this.apiKey,
+            this.apiUrl,
+            options.id,
+            options.updatedAfterUtc,
+            options.skip,
+            options.top,
+            options.countTotal,
+        );
     }
 
     /**
@@ -113,6 +121,246 @@ class InsightlyJS {
      */
     public async deleteComment(id: number): Promise<boolean> {
         return await Comments.deleteComment(this.apiKey, this.apiUrl, id);
+    }
+
+    /**************************************************************************
+     **************************************************************************
+     * Contacts
+     **************************************************************************
+     *************************************************************************/
+
+    /**
+     * @param options.brief (optional) Only return the top level properties of the Contact
+     * @param options.skip (optional) Number of Contacts to skip
+     * @param options.top (optional) Maximum number of Contacts to return
+     * @param options.countTotal (optional) Return the total number of Contacts
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntities
+     */
+     public async getContacts(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }) {
+        return await Contacts.getContacts(this.apiKey, this.apiUrl, options?.brief, options?.skip, options?.top, options?.countTotal);
+    }
+
+    /**
+     * @param contactId The ID of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntity
+     */
+    public async getContact(contactId: number) {
+        return await Contacts.getContact(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * 
+     * @param contactId The ID of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetDates
+     */
+    public async getContactDates(contactId: number) {
+        return await Contacts.getContactDates(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * @param options.contactId The ID of the Contact
+     * @param options.updatedAfterUtc (optional) Earliest date when the email was last updated
+     * @param options.top (optional) Maximum number of emails to return
+     * @param options.skip (optional) Number of emails to skip
+     * @param options.countTotal (optional) Return the total number of emails
+     * @param options.brief (optional) Only return the top level properties of the Email
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEmails
+     */
+    public async getContactEmails(options: {
+        contactId: number;
+        updatedAfterUtc?: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }) {
+        return await Contacts.getContactEmails(
+            this.apiKey,
+            this.apiUrl,
+            options.contactId,
+            options.updatedAfterUtc,
+            options.top,
+            options.skip,
+            options.countTotal,
+            options.brief,
+        );
+    }
+
+    /**
+     * @param options.contactId The ID of the Contact
+     * @param options.updatedAfterUtc (optional) Earliest date when the event was last updated
+     * @param options.top (optional) Maximum number of events to return
+     * @param options.skip (optional) Number of events to skip
+     * @param options.countTotal (optional) Return the total number of events
+     * @param options.brief (optional) Only return the top level properties of the Event
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEvents
+     */
+    public async getContactEvents(options: {
+        contactId: number;
+        updatedAfterUtc?: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }) {
+        return await Contacts.getContactEvents(
+            this.apiKey,
+            this.apiUrl,
+            options.contactId,
+            options.updatedAfterUtc,
+            options.top,
+            options.skip,
+            options.countTotal,
+            options.brief,
+        );
+    }
+
+    /**
+     * @param options.contactId The ID of the Contact
+     * @param options.updatedAfterUtc (optional) Earliest date when the file attachment was last updated
+     * @param options.skip (optional) Number of file attachments to skip
+     * @param options.top (optional) Maximum number of file attachments to return
+     * @param options.countTotal (optional) Return the total number of records
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetFileAttachments
+     */
+    public async getContactFileAttachments(options: {
+        contactId: number;
+        updatedAfterUtc?: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+    }) {
+        return await Contacts.getContactFileAttachments(
+            this.apiKey,
+            this.apiUrl,
+            options.contactId,
+            options.updatedAfterUtc,
+            options.top,
+            options.skip,
+            options.countTotal,
+        );
+    }
+
+    /**
+     * @param contactId The ID of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetFollow
+     */
+    public async getContactFollowState(contactId: number): Promise<{ FOLLOWING: boolean }> {
+        return await Contacts.getContactFollowState(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * @param contactId The ID of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetLinks
+     */
+    public async getContactLinks(contactId: number) {
+        return await Contacts.getContactLinks(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * @param options.contactId The ID of the Contact
+     * @param options.updatedAfterUtc (optional) Earliest date when the note was last updated
+     * @param options.top (optional) Maximum number of notes to return
+     * @param options.skip (optional) Number of notes to skip
+     * @param options.countTotal (optional) Return the total number of notes
+     * @param options.brief (optional) Only return the top level properties of the Note
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetNotes
+     */
+    public async getContactNotes(options: {
+        contactId: number;
+        updatedAfterUtc?: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }) {
+        return await Contacts.getContactNotes(
+            this.apiKey,
+            this.apiUrl,
+            options.contactId,
+            options.updatedAfterUtc,
+            options.top,
+            options.skip,
+            options?.countTotal,
+            options?.brief,
+        );
+    }
+
+    /**
+     * @param contactId The ID of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetTags
+     */
+    public async getContactTags(contactId: number) {
+        return await Contacts.getContactTags(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * @param options.contactId The ID of the Contact
+     * @param options.updatedAfterUtc (optional) Earliest date when the task was last updated
+     * @param options.top (optional) Maximum number of tasks to return
+     * @param options.skip (optional) Number of tasks to skip
+     * @param options.countTotal (optional) Return the total number of tasks
+     * @param options.brief (optional) Only return the top level properties of the Task
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetTasks
+     */
+    public async getContactTasks(options: {
+        contactId: number;
+        updatedAfterUtc?: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }) {
+        return await Contacts.getContactTasks(
+            this.apiKey,
+            this.apiUrl,
+            options.contactId,
+            options.updatedAfterUtc,
+            options.top,
+            options.skip,
+            options.countTotal,
+            options.brief,
+        );
+    }
+
+    /**
+     * @param options.query key-pair value to search for. Only one key-pair value is supported.
+     * @param options.top (optional) Maximum number of contacts to return
+     * @param options.skip (optional) Number of contacts to skip
+     * @param options.countTotal (optional) Return the total number of contacts
+     * @param options.brief (optional) Only return the top level properties of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntitiesBySearch
+     * @example
+     * ```ts
+     * const contacts = await insightly.searchContacts({
+     *     query: { first_name: 'John' },
+     *     top: 10,
+     *     brief: true
+     * });
+     * ```
+     */
+    public async searchContacts(options: { query: { [index: string]: string }; top?: number; skip?: number; countTotal?: boolean; brief?: boolean }) {
+        return await Contacts.searchContacts(this.apiKey, this.apiUrl, options.query, options.top, options.skip, options.countTotal);
+    }
+
+    /**
+     * @param options.tagName The name of the tag to filter on
+     * @param options.top (optional) Maximum number of contacts to return
+     * @param options.skip (optional) Number of contacts to skip
+     * @param options.countTotal (optional) Return the total number of contacts
+     * @param options.brief (optional) Only return the top level properties of the Contact
+     * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntitiesByTag
+     */
+    public async searchContactsByTag(options: { tagName: string; top?: number; skip?: number; countTotal?: boolean; brief?: boolean }) {
+        return await Contacts.searchContactsByTag(
+            this.apiKey,
+            this.apiUrl,
+            options.tagName,
+            options.brief,
+            options.top,
+            options.skip,
+            options.countTotal,
+        );
     }
 }
 
