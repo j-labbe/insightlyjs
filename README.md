@@ -15,13 +15,11 @@ The fetch API will be polyfilled if it is not available.
 InsightlyJS will throw an error if you are using an unsupported runtime environment and is unable to polyfill.
 
 ## Installation
-
 ```bash
 npm install insightlyjs --save
 ```
 
 ## Usage
-
 ```typescript
 import InsightlyJS from 'insightlyjs';
 
