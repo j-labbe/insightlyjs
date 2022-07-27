@@ -12,6 +12,9 @@ async function baseFetch(url: string, options: any): Promise<any> {
 }
 
 async function get(apiKey: string, apiUrl: string, path: string): Promise<any> {
+    if (path.charAt(0) === '/') {
+        path = path.substring(1);
+    }
     return await baseFetch(`${apiUrl}/v3.1/${path}`, {
         method: 'GET',
         headers: {
@@ -22,6 +25,9 @@ async function get(apiKey: string, apiUrl: string, path: string): Promise<any> {
 }
 
 async function post(apiKey: string, apiUrl: string, path: string, data: JSON): Promise<any> {
+    if (path.charAt(0) === '/') {
+        path = path.substring(1);
+    }
     return await baseFetch(`${apiUrl}/v3.1/${path}`, {
         method: 'POST',
         headers: {
@@ -33,6 +39,9 @@ async function post(apiKey: string, apiUrl: string, path: string, data: JSON): P
 }
 
 async function put(apiKey: string, apiUrl: string, path: string, data: JSON): Promise<any> {
+    if (path.charAt(0) === '/') {
+        path = path.substring(1);
+    }
     return await baseFetch(`${apiUrl}/v3.1/${path}`, {
         method: 'PUT',
         headers: {
@@ -45,6 +54,9 @@ async function put(apiKey: string, apiUrl: string, path: string, data: JSON): Pr
 }
 
 async function del(apiKey: string, apiUrl: string, path: string): Promise<boolean> {
+    if (path.charAt(0) === '/') {
+        path = path.substring(1);
+    }
     return await baseFetch(`${apiUrl}/v3.1/${path}`, {
         method: 'DELETE',
         headers: {
