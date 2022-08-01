@@ -3,8 +3,9 @@ import buildUrlParams from './utils/buildUrlParams';
 import { Contact, Email, FileAttachment, InsightlyDate, InsightlyEvent, Link, Note, Tag, Task } from './types';
 
 async function getContacts(apiKey: string, apiUrl: string, brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<Contact[]> {
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: !!countTotal });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: countTotal });
     return await request.get(`/Contacts${params}`);
 }
 
@@ -39,8 +40,9 @@ async function getContactEmails(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal }, { brief: !!brief });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
     return await request.get(`/Contacts/${contactId}/Emails${params}`);
 }
 
@@ -57,8 +59,9 @@ async function getContactEvents(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal }, { brief: !!brief });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
     return await request.get(`/Contacts/${contactId}/Events${params}`);
 }
 
@@ -74,8 +77,9 @@ async function getContactFileAttachments(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal });
     return await request.get(`/Contacts/${contactId}/FileAttachments${params}`);
 }
 
@@ -114,8 +118,9 @@ async function getContactNotes(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal }, { brief: !!brief });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
     return await request.get(`/Contacts/${contactId}/Notes${params}`);
 }
 
@@ -140,8 +145,9 @@ async function getContactTasks(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal }, { brief: !!brief });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
     return await request.get(`/Contacts/${contactId}/Tasks${params}`);
 }
 
@@ -156,8 +162,9 @@ async function searchContacts(
     if (!query) {
         throw new Error('InsightlyJS: Query is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams(query, { skip }, { top }, { count_total: !!countTotal });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams(query, { skip }, { top }, { count_total: countTotal });
 
     return await request.get(`/Contacts/Search${params}`);
 }
@@ -174,8 +181,9 @@ async function searchContactsByTag(
     if (!tagName) {
         throw new Error('InsightlyJS: Tag name is required');
     }
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    const params = buildUrlParams({ tag_name: tagName }, { brief }, { skip }, { top }, { count_total: !!countTotal });
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
+    const params = buildUrlParams({ tag_name: tagName }, { brief }, { skip }, { top }, { count_total: countTotal });
     return await request.get(`/Contacts/SearchByTag${params}`);
 }
 

@@ -10,9 +10,10 @@ async function getActivitySetList(
     top?: number,
     countTotal?: boolean,
 ): Promise<ActivitySet[]> {
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
 
-    const urlParams = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: !!countTotal });
+    const urlParams = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: countTotal });
 
     return await request.get(`/ActivitySets${urlParams}`);
 }

@@ -175,8 +175,8 @@ class InsightlyJS {
             options.updatedAfterUtc,
             options.top,
             options.skip,
-            options.countTotal,
             options.brief,
+            options.countTotal,
         );
     }
 
@@ -204,8 +204,8 @@ class InsightlyJS {
             options.updatedAfterUtc,
             options.top,
             options.skip,
-            options.countTotal,
             options.brief,
+            options.countTotal,
         );
     }
 
@@ -275,8 +275,8 @@ class InsightlyJS {
             options.updatedAfterUtc,
             options.top,
             options.skip,
-            options?.countTotal,
             options?.brief,
+            options?.countTotal,
         );
     }
 
@@ -312,8 +312,8 @@ class InsightlyJS {
             options.updatedAfterUtc,
             options.top,
             options.skip,
-            options.countTotal,
             options.brief,
+            options.countTotal,
         );
     }
 

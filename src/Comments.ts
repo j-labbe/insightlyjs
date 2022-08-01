@@ -18,9 +18,10 @@ async function getFileAttachments(
     top?: number,
     countTotal?: boolean,
 ): Promise<FileAttachment[]> {
-    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+    countTotal = !!countTotal;
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
 
-    const urlParams = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: !!countTotal });
+    const urlParams = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal });
 
     // prettier-ignore
     return await request.get(`/Comments/${id}/FileAttachments?${urlParams}`);

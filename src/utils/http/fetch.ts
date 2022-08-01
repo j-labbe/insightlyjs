@@ -1,9 +1,16 @@
-async function baseFetch(url: string, options: any): Promise<any> {
+async function baseFetch(url: string, options: any, countTotal?: boolean): Promise<any> {
+    
     return await fetch(url, options).then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
+
             if (options.method === 'DELETE') {
                 return true;
             }
+            if (countTotal) {
+                //@ts-ignore - this is always a number if countTotal is passed in
+                return parseInt(response.headers.get("content-length"));
+            }
+
             return await response.json();
         } else {
             throw new Error(response.statusText);
@@ -11,17 +18,18 @@ async function baseFetch(url: string, options: any): Promise<any> {
     });
 }
 
-async function get(apiKey: string, apiUrl: string, path: string): Promise<any> {
+async function get(apiKey: string, apiUrl: string, path: string, countTotal?: boolean): Promise<any> {
     if (path.charAt(0) === '/') {
         path = path.substring(1);
     }
+
     return await baseFetch(`${apiUrl}/v3.1/${path}`, {
         method: 'GET',
         headers: {
             Authorization: `Basic ${apiKey}`,
             'Accepts-Encoding': 'gzip',
         },
-    });
+    }, countTotal);
 }
 
 async function post(apiKey: string, apiUrl: string, path: string, data: JSON): Promise<any> {

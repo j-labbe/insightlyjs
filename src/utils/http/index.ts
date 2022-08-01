@@ -4,8 +4,9 @@ import * as fetch from './fetch';
 class InsightlyHTTPRequest {
     private readonly baseUrl: string;
     private readonly apiKey: string;
+    public countTotal?: boolean;
 
-    constructor(apiKey: string, baseUrl: string) {
+    constructor(apiKey: string, baseUrl: string, countTotal?: boolean) {
         if (!apiKey) {
             throw new Error('API key is required');
         }
@@ -22,10 +23,12 @@ class InsightlyHTTPRequest {
          * Insightly requires the api key to be encoded in base64 when sent in the Authorization header
          */
         this.apiKey = Base64.encode(apiKey);
+
+        this.countTotal = !!countTotal;
     }
 
     async get(path: string): Promise<any> {
-        return await fetch.get(this.apiKey, this.baseUrl, path);
+        return await fetch.get(this.apiKey, this.baseUrl, path, this.countTotal);
     }
 
     async put(path: string, data: any): Promise<any> {
