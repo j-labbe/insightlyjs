@@ -1,5 +1,5 @@
+import "./fetch-polyfill";
 import { ActivitySet, FileAttachment, Comment } from './types';
-import runtimeIsCompatible from './utils/runtimeIsCompatible';
 import * as ActivitySets from './ActivitySets';
 import * as Comments from './Comments';
 import * as Contacts from './Contacts';
@@ -20,12 +20,6 @@ class InsightlyJS {
     constructor(options: { apiKey: string; apiUrl: string }) {
         this.apiKey = options.apiKey;
         this.apiUrl = options.apiUrl;
-
-        runtimeIsCompatible().then((isCompatible) => {
-            if (!isCompatible) {
-                throw new Error('InsightlyJS is not compatible with this runtime. Please upgrade your browser or Node version (18+).');
-            }
-        });
 
         if (!options.apiKey || !options.apiUrl) {
             throw new Error('InsightlyJS: apiKey and apiUrl are required.');
