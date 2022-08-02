@@ -47,10 +47,18 @@ const InsightlyJS = await import('insightlyjs');
 ```
 
 ### Configuration
+
+Before you can use the module, you must configure it with your API key and API url.
+
+You can locate them by logging into your Insightly account, and navigating to the following URL:
+[https://crm.na1.insightly.com/Users/UserSettings/#apikey](https://crm.na1.insightly.com/Users/UserSettings/#apikey)
+
+Note: I am in the na1 region. Your region may be different. Adjust the URL accordingly.
+
 ```ts
 const insightly = new InsightlyJS({
   apiKey: '<your-api-key>',
-  apiUrl: 'https://api.insight.ly/v3.1',
+  apiUrl: 'https://<your-api-url>',
 });
 ```
 
