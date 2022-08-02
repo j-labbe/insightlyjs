@@ -4,6 +4,8 @@
 
 insightlyjs is a lightweight __Node.js__ library for the Insightly API v3.1.
 
+[![npm version](https://img.shields.io/npm/v/insightlyjs)](https://www.npmjs.com/package/insightlyjs)
+
 The goal of InsightlyJS is to provide a simple and intuitive way to interact with the Insightly API.
 
 <!-- TOC -->
