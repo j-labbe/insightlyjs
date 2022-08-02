@@ -13,6 +13,7 @@ The goal of InsightlyJS is to provide a simple and intuitive way to interact wit
 - [Usage](#usage)
 - [Examples](#examples)
 - [TypeScript](#typescript)
+- [Limitations](#limitations)
 - [License](https://github.com/j-labbe/insightlyjs/blob/master/LICENSE)
 - [Contact](#contact)
 
@@ -292,6 +293,11 @@ To use the types, import them into your project like so:
 ```ts
 import { Contact } from "insightlyjs";
 ```
+
+## Limitations
+While it is possible to use the Insightly API to perform CRUD actions, some actions are unavailable, such as assigning a contact to an Activity. This appears to be a limitation on Insightly's end.
+
+For a complete list of limitations and a more in-depth explanation, see [this issue](https://github.com/j-labbe/insightlyjs/issues/6).
 
 ## Completed modules
 
