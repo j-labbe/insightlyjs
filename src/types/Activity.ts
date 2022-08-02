@@ -29,4 +29,10 @@ interface Activity {
     DURATION: number;
 }
 
-export default Activity;
+interface ActivityAssignment {
+    ACTIVITY_ID: number;
+    RESPONSIBLE_USER_ID: number;
+    ASSIGNED_TEAM_ID: number;
+}
+
+export { Activity, ActivityAssignment };

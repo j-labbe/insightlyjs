@@ -1,4 +1,4 @@
-import Activity from './Activity';
+import { Activity, ActivityAssignment } from './Activity';
 
 interface ActivitySet {
     ACTIVITYSET_ID: number;
@@ -11,4 +11,11 @@ interface ActivitySet {
     ACTIVITIES: Activity[] | null;
 }
 
-export default ActivitySet;
+interface ActivitySetAssignment {
+    ACTIVITYSET_ID: number;
+    START_DATE: string;
+    END_DATE: string;
+    ACTIVITY_ASSIGNMENTS: ActivityAssignment[];
+}
+
+export { ActivitySet, ActivitySetAssignment };

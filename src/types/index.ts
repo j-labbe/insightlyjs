@@ -1,8 +1,8 @@
-export { default as Activity } from './Activity';
-export { default as ActivitySet } from './ActivitySet';
+export { Activity, ActivityAssignment } from './Activity';
+export { ActivitySet, ActivitySetAssignment } from './ActivitySet';
 export { default as Comment } from './Comment';
-export { default as Contact } from './Contact';
-export { default as CustomField } from "./CustomField";
+export { Contact, ValidContact, ValidContactWithTags } from './Contact';
+export { default as CustomField } from './CustomField';
 export { default as Email } from './Email';
 export { default as InsightlyEvent } from './Event';
 export { default as FileAttachment } from './FileAttachment';
