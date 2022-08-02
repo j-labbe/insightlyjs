@@ -1,6 +1,7 @@
 import InsightlyHTTPRequest from './utils/http';
 import buildUrlParams from './utils/buildUrlParams';
 import { Contact, Email, FileAttachment, InsightlyDate, InsightlyEvent, Link, Note, Tag, Task } from './types';
+import { isIso } from './utils/validators';
 
 async function getContacts(apiKey: string, apiUrl: string, brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<Contact[]> {
     countTotal = !!countTotal;
@@ -40,6 +41,9 @@ async function getContactEmails(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
+    }
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
     const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
@@ -59,6 +63,9 @@ async function getContactEvents(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
+    }
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
     const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
@@ -76,6 +83,9 @@ async function getContactFileAttachments(
 ): Promise<FileAttachment[]> {
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
+    }
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
     }
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
@@ -118,6 +128,9 @@ async function getContactNotes(
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
+    }
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
     const params = buildUrlParams({ updated_after_utc: updatedAfterUtc }, { skip }, { top }, { count_total: countTotal }, { brief: !!brief });
@@ -144,6 +157,9 @@ async function getContactTasks(
 ): Promise<Task[]> {
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
+    }
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
     }
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
@@ -185,6 +201,18 @@ async function searchContactsByTag(
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
     const params = buildUrlParams({ tag_name: tagName }, { brief }, { skip }, { top }, { count_total: countTotal });
     return await request.get(`/Contacts/SearchByTag${params}`);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// CREATE operations
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function makeAddContactRequest(apiKey: string, apiUrl: string, contact: Contact): Promise<Contact> {
+    if (!contact) {
+        throw new Error('InsightlyJS: Contact is required');
+    }
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+    return await request.post('/Contacts', JSON.stringify(contact));
 }
 
 // TODO: add, update, delete operations

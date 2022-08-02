@@ -1,6 +1,7 @@
 import InsightlyHTTPRequest from './utils/http';
 import { FileAttachment, Comment } from './types';
 import buildUrlParams from './utils/buildUrlParams';
+import { isIso } from './utils/validators';
 
 /**
  * These need to be tested. As of now I (j-labbe) only have time to test GET requests.
@@ -18,6 +19,10 @@ async function getFileAttachments(
     top?: number,
     countTotal?: boolean,
 ): Promise<FileAttachment[]> {
+    if (updatedAfterUtc && !isIso(updatedAfterUtc)) {
+        throw new Error('InsightlyJS: updatedAfterUtc must be a valid ISO 8601 date string');
+    }
+
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
 
