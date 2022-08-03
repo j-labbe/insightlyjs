@@ -1,5 +1,5 @@
 import "./fetch-polyfill";
-import { ActivitySet, FileAttachment, Comment } from './types';
+import { ActivitySet, FileAttachment, Comment, Contact } from './types';
 import * as ActivitySets from './ActivitySets';
 import * as Comments from './Comments';
 import * as Contacts from './Contacts';
@@ -356,6 +356,19 @@ class InsightlyJS {
             options.countTotal,
         );
     }
+
+    public async addContact(contact: Contact) {
+        return await Contacts.addContact(this.apiKey, this.apiUrl, contact);
+    }
+
+    public async updateContact(contactId: number, contact: Contact) {
+        return await Contacts.updateContact(this.apiKey, this.apiUrl, contactId, contact);
+    }
+
+    public async deleteContact(contactId: number) {
+        return await Contacts.deleteContact(this.apiKey, this.apiUrl, contactId);
+    }
+
 }
 
 export default InsightlyJS;

@@ -256,4 +256,52 @@ describe('Contacts', () => {
             expect(true).toBe(true);
         });
     });
+
+    let newContactId: number;
+
+    describe("addContact", async () => {
+        it("should be defined", () => {
+            expect(insightly.addContact).toBeDefined();
+        });
+
+        it("should be a function", () => {
+            expect(typeof insightly.addContact).toBe("function");
+        });
+
+        it("should add a contact", async () => {
+            const contact = await insightly.addContact({
+                FIRST_NAME: "John",
+                LAST_NAME: "Doe",
+                EMAIL_ADDRESS: "john.doe@example.com"
+            });
+            expect(contact).toBeDefined();
+            expect(contact.CONTACT_ID).toBeDefined();
+            expect(typeof contact.CONTACT_ID).toBe("number");
+            //@ts-ignore
+            newContactId = contact.CONTACT_ID;
+        });
+
+        it("retrieve the newly created contact", async () => {
+            const contact = await insightly.getContact(newContactId);
+            expect(contact).toBeDefined();
+            expect(typeof contact).toBe("object");
+        });
+
+        // we will use the contact id to delete the contact later
+    });
+
+    describe("updateContact", async () => {
+        it("should be defined", () => {
+            expect(insightly.updateContact).toBeDefined();
+        }),
+        it("should be a function", () => {
+            expect(typeof insightly.updateContact).toBe("function");
+        }),
+        it("should update a contact", async () => {
+            const contact = await insightly.updateContact(newContactId, {
+                FIRST_NAME: "Jim",
+                LAST_NAME: "Smith"
+            });
+        });
+    });
 });
