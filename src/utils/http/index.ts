@@ -44,4 +44,12 @@ class InsightlyHTTPRequest {
     }
 }
 
+export async function getLatestVersion(): Promise<number> {
+    // fetch the latest version from npm and return it
+    const data = await fetch.baseFetch('https://registry.npmjs.org/insightlyjs', {}, false);
+    //@ts-ignore
+    const latestVersion = data['dist-tags']?.latest;
+    return latestVersion;
+}
+
 export default InsightlyHTTPRequest;

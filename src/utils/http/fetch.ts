@@ -74,4 +74,4 @@ async function del(apiKey: string, apiUrl: string, path: string): Promise<boolea
     });
 }
 
-export { get, post, put, del };
+export { get, post, put, del, baseFetch };

@@ -1,12 +1,16 @@
-import "./fetch-polyfill";
+import './fetch-polyfill';
 import { ActivitySet, FileAttachment, Comment, Contact } from './types';
 import * as ActivitySets from './ActivitySets';
 import * as Comments from './Comments';
 import * as Contacts from './Contacts';
+import * as fs from 'fs';
+import * as path from 'path';
+import { getLatestVersion } from './utils/http';
 
 // TODO: add ISO 8601 date format validation
 
 class InsightlyJS {
+    private readonly version = JSON?.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'))?.version;
     private readonly apiKey: string;
     private readonly apiUrl: string;
 
@@ -23,6 +27,17 @@ class InsightlyJS {
 
         if (!options.apiKey || !options.apiUrl) {
             throw new Error('InsightlyJS: apiKey and apiUrl are required.');
+        }
+
+        if (!process.env.JEST_WORKER_ID) {
+            // check the installed version against the latest version
+            getLatestVersion().then((latestVersion) => {
+                if (this.version !== latestVersion) {
+                    console.warn(
+                        `InsightlyJS: You are using version ${this.version}, but version ${latestVersion} is available. Please upgrade by running 'npm install insightlyjs@latest'.`,
+                    );
+                }
+            });
         }
 
         this.getActivitySetList = this.getActivitySetList.bind(this);
@@ -130,7 +145,7 @@ class InsightlyJS {
      * @param options.countTotal (optional) Return the total number of Contacts
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntities
      */
-     public async getContacts(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }) {
+    public async getContacts(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }) {
         return await Contacts.getContacts(this.apiKey, this.apiUrl, options?.brief, options?.skip, options?.top, options?.countTotal);
     }
 
@@ -143,7 +158,7 @@ class InsightlyJS {
     }
 
     /**
-     * 
+     *
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetDates
      */
@@ -368,7 +383,6 @@ class InsightlyJS {
     public async deleteContact(contactId: number) {
         return await Contacts.deleteContact(this.apiKey, this.apiUrl, contactId);
     }
-
 }
 
 export default InsightlyJS;
