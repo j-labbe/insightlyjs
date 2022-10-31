@@ -1,5 +1,19 @@
 import './fetch-polyfill';
-import { ActivitySet, FileAttachment, Comment, Contact } from './types';
+import {
+    ActivitySet,
+    FileAttachment,
+    Comment,
+    Contact,
+    Link,
+    Task,
+    ValidContact,
+    ValidContactWithTags,
+    Tag,
+    Note,
+    InsightlyEvent,
+    Email,
+    InsightlyDate,
+} from './types';
 import * as ActivitySets from './ActivitySets';
 import * as Comments from './Comments';
 import * as Contacts from './Contacts';
@@ -33,19 +47,42 @@ class InsightlyJS {
             // check the installed version against the latest version
             getLatestVersion().then((latestVersion) => {
                 if (this.version !== latestVersion) {
-                    console.warn(
-                        `InsightlyJS: You are using version ${this.version}, but version ${latestVersion} is available. Please upgrade by running 'npm install insightlyjs@latest'.`,
-                    );
+                    //prettier-ignore
+                    console.warn(`InsightlyJS: You are using version ${this.version}, but version ${latestVersion} is available. Please upgrade by running 'npm install insightlyjs@latest'.`,);
                 }
             });
         }
 
-        this.getActivitySetList = this.getActivitySetList.bind(this);
-        this.getActivitySet = this.getActivitySet.bind(this);
-        this.getCommentFileAttachments = this.getCommentFileAttachments.bind(this);
-        this.addCommentFileAttachment = this.addCommentFileAttachment.bind(this);
-        this.updateComment = this.updateComment.bind(this);
-        this.deleteComment = this.deleteComment.bind(this);
+        // bindings for advanced usages
+
+        this.activitySetGet = this.activitySetGet.bind(this);
+        this.activitySetGetList = this.activitySetGetList.bind(this);
+
+        this.commentsGetFileAttachments = this.commentsGetFileAttachments.bind(this);
+        this.commentsAddFileAttachment = this.commentsAddFileAttachment.bind(this);
+        this.commentUpdate = this.commentUpdate.bind(this);
+        this.commentDelete = this.commentDelete.bind(this);
+
+        this.contactsAdd = this.contactsAdd.bind(this);
+        this.contactsAddLink = this.contactsAddLink.bind(this);
+        this.contactsAddTag = this.contactsAddTag.bind(this);
+        this.contactsAddNote = this.contactsAddNote.bind(this);
+        this.contactsDelete = this.contactsDelete.bind(this);
+        this.contactsFollow = this.contactsFollow.bind(this);
+        this.contactsGet = this.contactsGet.bind(this);
+        this.contactsGetAll = this.contactsGetAll.bind(this);
+        this.contactsGetDates = this.contactsGetDates.bind(this);
+        this.contactsGetEmails = this.contactsGetEmails.bind(this);
+        this.contactsGetEvents = this.contactsGetEvents.bind(this);
+        this.contactsGetFileAttachments = this.contactsGetFileAttachments.bind(this);
+        this.contactsGetFollowState = this.contactsGetFollowState.bind(this);
+        this.contactsGetLinks = this.contactsGetLinks.bind(this);
+        this.contactsGetNotes = this.contactsGetNotes.bind(this);
+        this.contactsGetTags = this.contactsGetTags.bind(this);
+        this.contactsGetTasks = this.contactsGetTasks.bind(this);
+        this.contactsSearch = this.contactsSearch.bind(this);
+        this.contactsSearchByTag = this.contactsSearchByTag.bind(this);
+        this.contactsUpdate = this.contactsUpdate.bind(this);
     }
 
     /**************************************************************************
@@ -61,7 +98,7 @@ class InsightlyJS {
      * @param options.countTotal Return the total number of ActivitySets
      * @see https://api.insightly.com/v3.1/Help#!/ActivitySets/GetActivitySets
      */
-    public async getActivitySetList(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }): Promise<ActivitySet[]> {
+    public async activitySetGetList(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }): Promise<ActivitySet[]> {
         return await ActivitySets.getActivitySetList(this.apiKey, this.apiUrl, options?.brief, options?.skip, options?.top, options?.countTotal);
     }
 
@@ -69,7 +106,7 @@ class InsightlyJS {
      * @param id The ID of the ActivitySet
      * @see https://api.insightly.com/v3.1/Help#!/ActivitySets/GetActivitySet
      */
-    public async getActivitySet(id: number): Promise<ActivitySet> {
+    public async activitySetGet(id: number): Promise<ActivitySet> {
         return await ActivitySets.getActivitySet(this.apiKey, this.apiUrl, id);
     }
 
@@ -78,7 +115,9 @@ class InsightlyJS {
      * *************************************************************************
      * Comments
      * *************************************************************************
-     * ***********************************************************************
+     * ************************************************************************/
+
+    /**
      * @param options.id The ID of the Comment
      * @param options.updatedAfterUtc Earliest date when the file attachment was last updated
      * @param options.skip Number of file attachments to skip
@@ -86,7 +125,7 @@ class InsightlyJS {
      * @param options.countTotal Return the total number of records
      * @see {https} ://api.insightly.com/v3.1/Help#!/Comments/GetFileAttachments
      */
-    public async getCommentFileAttachments(options: {
+    public async commentsGetFileAttachments(options: {
         id: number;
         updatedAfterUtc?: string;
         skip?: number;
@@ -110,7 +149,7 @@ class InsightlyJS {
      * @param fileAttachment The file attachment to add
      * @see https://api.insightly.com/v3.1/Help#!/Comments/AddFileAttachment
      */
-    public async addCommentFileAttachment(id: number, fileAttachment: FileAttachment): Promise<FileAttachment> {
+    public async commentsAddFileAttachment(id: number, fileAttachment: FileAttachment): Promise<FileAttachment> {
         return await Comments.addFileAttachment(this.apiKey, this.apiUrl, id, fileAttachment);
     }
 
@@ -119,7 +158,7 @@ class InsightlyJS {
      * @param id The ID of the Comment
      * @param comment The comment to update
      */
-    public async updateComment(id: number, comment: Comment): Promise<Comment> {
+    public async commentUpdate(id: number, comment: Comment): Promise<Comment> {
         return await Comments.updateComment(this.apiKey, this.apiUrl, id, comment);
     }
 
@@ -128,7 +167,7 @@ class InsightlyJS {
      * @param id The ID of the Comment
      * @returns {boolean} True if the comment was successfully deleted, false otherwise
      */
-    public async deleteComment(id: number): Promise<boolean> {
+    public async commentDelete(id: number): Promise<boolean> {
         return await Comments.deleteComment(this.apiKey, this.apiUrl, id);
     }
 
@@ -145,7 +184,7 @@ class InsightlyJS {
      * @param options.countTotal (optional) Return the total number of Contacts
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntities
      */
-    public async getContacts(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }) {
+    public async contactsGetAll(options?: { brief?: boolean; skip?: number; top?: number; countTotal?: boolean }): Promise<ValidContact[]> {
         return await Contacts.getContacts(this.apiKey, this.apiUrl, options?.brief, options?.skip, options?.top, options?.countTotal);
     }
 
@@ -153,7 +192,7 @@ class InsightlyJS {
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntity
      */
-    public async getContact(contactId: number) {
+    public async contactsGet(contactId: number): Promise<ValidContact> {
         return await Contacts.getContact(this.apiKey, this.apiUrl, contactId);
     }
 
@@ -162,7 +201,7 @@ class InsightlyJS {
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetDates
      */
-    public async getContactDates(contactId: number) {
+    public async contactsGetDates(contactId: number): Promise<InsightlyDate[]> {
         return await Contacts.getContactDates(this.apiKey, this.apiUrl, contactId);
     }
 
@@ -175,14 +214,14 @@ class InsightlyJS {
      * @param options.brief (optional) Only return the top level properties of the Email
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEmails
      */
-    public async getContactEmails(options: {
+    public async contactsGetEmails(options: {
         contactId: number;
         updatedAfterUtc?: string;
         top?: number;
         skip?: number;
         countTotal?: boolean;
         brief?: boolean;
-    }) {
+    }): Promise<Email[]> {
         return await Contacts.getContactEmails(
             this.apiKey,
             this.apiUrl,
@@ -204,14 +243,14 @@ class InsightlyJS {
      * @param options.brief (optional) Only return the top level properties of the Event
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEvents
      */
-    public async getContactEvents(options: {
+    public async contactsGetEvents(options: {
         contactId: number;
         updatedAfterUtc?: string;
         top?: number;
         skip?: number;
         countTotal?: boolean;
         brief?: boolean;
-    }) {
+    }): Promise<InsightlyEvent[]> {
         return await Contacts.getContactEvents(
             this.apiKey,
             this.apiUrl,
@@ -232,13 +271,13 @@ class InsightlyJS {
      * @param options.countTotal (optional) Return the total number of records
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetFileAttachments
      */
-    public async getContactFileAttachments(options: {
+    public async contactsGetFileAttachments(options: {
         contactId: number;
         updatedAfterUtc?: string;
         top?: number;
         skip?: number;
         countTotal?: boolean;
-    }) {
+    }): Promise<FileAttachment[]> {
         return await Contacts.getContactFileAttachments(
             this.apiKey,
             this.apiUrl,
@@ -254,7 +293,7 @@ class InsightlyJS {
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetFollow
      */
-    public async getContactFollowState(contactId: number): Promise<{ FOLLOWING: boolean }> {
+    public async contactsGetFollowState(contactId: number): Promise<{ FOLLOWING: boolean }> {
         return await Contacts.getContactFollowState(this.apiKey, this.apiUrl, contactId);
     }
 
@@ -262,7 +301,7 @@ class InsightlyJS {
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetLinks
      */
-    public async getContactLinks(contactId: number) {
+    public async contactsGetLinks(contactId: number): Promise<Link[]> {
         return await Contacts.getContactLinks(this.apiKey, this.apiUrl, contactId);
     }
 
@@ -275,14 +314,14 @@ class InsightlyJS {
      * @param options.brief (optional) Only return the top level properties of the Note
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetNotes
      */
-    public async getContactNotes(options: {
+    public async contactsGetNotes(options: {
         contactId: number;
         updatedAfterUtc?: string;
         top?: number;
         skip?: number;
         countTotal?: boolean;
         brief?: boolean;
-    }) {
+    }): Promise<Note[]> {
         return await Contacts.getContactNotes(
             this.apiKey,
             this.apiUrl,
@@ -299,7 +338,7 @@ class InsightlyJS {
      * @param contactId The ID of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetTags
      */
-    public async getContactTags(contactId: number) {
+    public async contactsGetTags(contactId: number): Promise<Tag[]> {
         return await Contacts.getContactTags(this.apiKey, this.apiUrl, contactId);
     }
 
@@ -312,14 +351,14 @@ class InsightlyJS {
      * @param options.brief (optional) Only return the top level properties of the Task
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetTasks
      */
-    public async getContactTasks(options: {
+    public async contactsGetTasks(options: {
         contactId: number;
         updatedAfterUtc?: string;
         top?: number;
         skip?: number;
         countTotal?: boolean;
         brief?: boolean;
-    }) {
+    }): Promise<Task[]> {
         return await Contacts.getContactTasks(
             this.apiKey,
             this.apiUrl,
@@ -348,7 +387,13 @@ class InsightlyJS {
      * });
      * ```
      */
-    public async searchContacts(options: { query: { [index: string]: string }; top?: number; skip?: number; countTotal?: boolean; brief?: boolean }) {
+    public async contactsSearch(options: {
+        query: { [index: string]: string };
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }): Promise<ValidContact[]> {
         return await Contacts.searchContacts(this.apiKey, this.apiUrl, options.query, options.top, options.skip, options.countTotal);
     }
 
@@ -360,7 +405,13 @@ class InsightlyJS {
      * @param options.brief (optional) Only return the top level properties of the Contact
      * @see https://api.insightly.com/v3.1/Help#!/Contacts/GetEntitiesByTag
      */
-    public async searchContactsByTag(options: { tagName: string; top?: number; skip?: number; countTotal?: boolean; brief?: boolean }) {
+    public async contactsSearchByTag(options: {
+        tagName: string;
+        top?: number;
+        skip?: number;
+        countTotal?: boolean;
+        brief?: boolean;
+    }): Promise<ValidContactWithTags[]> {
         return await Contacts.searchContactsByTag(
             this.apiKey,
             this.apiUrl,
@@ -372,17 +423,93 @@ class InsightlyJS {
         );
     }
 
-    public async addContact(contact: Contact) {
+    /**
+     * @param contact The Contact to create
+     * @returns The created Contact
+     */
+    public async contactsAdd(contact: Contact): Promise<ValidContact> {
         return await Contacts.addContact(this.apiKey, this.apiUrl, contact);
     }
 
-    public async updateContact(contactId: number, contact: Contact) {
+    /**
+     * @param contactId The ID of the Contact to update
+     * @param contact New Contact's complete data
+     * @returns The newly updated Contact's data
+     */
+    public async contactsUpdate(contactId: number, contact: Contact): Promise<ValidContact> {
         return await Contacts.updateContact(this.apiKey, this.apiUrl, contactId, contact);
     }
 
-    public async deleteContact(contactId: number) {
+    /**
+     * @param contactId The ID of the Contact to delete
+     * @returns Whether or not the Contact was deleted
+     */
+    public async contactsDelete(contactId: number): Promise<boolean> {
         return await Contacts.deleteContact(this.apiKey, this.apiUrl, contactId);
     }
+
+    /**
+     * @param contactId The ID of the Contact that the API user will follow
+     * @returns
+     */
+    public async contactsFollow(contactId: number): Promise<boolean> {
+        return await Contacts.apiUserFollowContact(this.apiKey, this.apiUrl, contactId);
+    }
+
+    /**
+     * @param contactId The ID of the Contact to add a link to
+     * @param link The new Link to add
+     * @returns The newly created Link
+     */
+    public async contactsAddLink(contactId: number, link: Link): Promise<Link> {
+        return await Contacts.addLink(this.apiKey, this.apiUrl, contactId, link);
+    }
+
+    /**
+     * @param contactId The ID of the Contact to add a note to
+     * @param note The new Note to add
+     * @returns The newly created Note
+     */
+    public async contactsAddNote(contactId: number, note: Note): Promise<Note> {
+        return await Contacts.addNote(this.apiKey, this.apiUrl, contactId, note);
+    }
+
+    /**
+     *
+     * @param contactId The ID of the Contact to add a tag to
+     * @param tag The new Tag to add
+     * @returns
+     */
+    public async contactsAddTag(contactId: number, tag: string): Promise<Tag> {
+        return await Contacts.addTag(this.apiKey, this.apiUrl, contactId, tag);
+    }
+
+    /**
+     * @deprecated - This has not been tested yet
+     * @param contactId The ID of the Contact to add a task to
+     * @param fileName Name of the file to attach to the contact
+     * @param image File
+     */
+    public async contactsUpdateImage(contactId: number, fileName: string, image: File): Promise<boolean> {
+        return await Contacts.updateImage(this.apiKey, this.apiUrl, contactId, fileName, image);
+    }
+
+    // Idea:
+    // public async contactsUpdateImageFromUrl(contactId: number, imageUrl: string)
+
+    //     public async contactsUpdateLink(contactId: number, linkId: number, link: Link): Promise<Link> {
+    //         return await Contacts.updateLink(this.apiKey, this.apiUrl, contactId, linkId, link);
+    //     }
+
+    /**************************************************************************
+     **************************************************************************
+     * Countries
+     **************************************************************************
+     *************************************************************************/
+
+    //  public async countriesGetList(): Promise<Country[]> {
+        
+    // }
 }
 
 export default InsightlyJS;

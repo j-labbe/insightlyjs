@@ -1,10 +1,32 @@
+// Left off at Update a Link
+
 import InsightlyHTTPRequest from './utils/http';
 import buildUrlParams from './utils/buildUrlParams';
-import { Contact, ValidContact, ValidContactWithTags, Email, FileAttachment, InsightlyDate, InsightlyEvent, Link, Note, Tag, Task, ActivitySetAssignment } from './types';
+import {
+    Contact,
+    ValidContact,
+    ValidContactWithTags,
+    Email,
+    FileAttachment,
+    InsightlyDate,
+    InsightlyEvent,
+    Link,
+    Note,
+    Tag,
+    Task,
+    ActivitySetAssignment,
+} from './types';
 import { isIso } from './utils/validators';
 import capitalize from './utils/capitalizeKeys';
 
-async function getContacts(apiKey: string, apiUrl: string, brief?: boolean, skip?: number, top?: number, countTotal?: boolean): Promise<ValidContact[]> {
+async function getContacts(
+    apiKey: string,
+    apiUrl: string,
+    brief?: boolean,
+    skip?: number,
+    top?: number,
+    countTotal?: boolean,
+): Promise<ValidContact[]> {
     countTotal = !!countTotal;
     const request = new InsightlyHTTPRequest(apiKey, apiUrl, countTotal);
     const params = buildUrlParams({ brief: !!brief }, { skip }, { top }, { count_total: countTotal });
@@ -222,8 +244,12 @@ async function addContact(apiKey: string, apiUrl: string, contact: Contact): Pro
 /**
  * @see https://github.com/j-labbe/insightlyjs/issues/6
  */
-async function addActivitySet(apiKey: string, apiUrl: string, contactId: number, activitySetAssignment: ActivitySetAssignment): Promise<ActivitySetAssignment> {
-
+async function addActivitySet(
+    apiKey: string,
+    apiUrl: string,
+    contactId: number,
+    activitySetAssignment: ActivitySetAssignment,
+): Promise<ActivitySetAssignment> {
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
@@ -257,13 +283,13 @@ async function addFileAttachment(apiKey: string, apiUrl: string, contactId: numb
 /**
  * Make the API user follow a contact
  */
- async function apiUserFollowContact(apiKey: string, apiUrl: string, contactId: number): Promise<void> {
+async function apiUserFollowContact(apiKey: string, apiUrl: string, contactId: number): Promise<boolean> {
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
     const request = new InsightlyHTTPRequest(apiKey, apiUrl);
-    return await request.post(`/Contacts/${contactId}/Follow`, null);
-
+    const response = await request.post(`/Contacts/${contactId}/Follow`, null);
+    return JSON.parse(response)?.FOLLOWING || response?.FOLLOWING;
 }
 
 async function addLink(apiKey: string, apiUrl: string, contactId: number, link: Link): Promise<Link> {
@@ -281,6 +307,7 @@ async function addLink(apiKey: string, apiUrl: string, contactId: number, link: 
  * @todo TODO: check this implementation - it might be wrong
  * @ignore (temporary)
  * @deprecated - do not use until I can confirm this implementation is correct
+ * @see - https://api.na1.insightly.com/v3.1/#!/Contacts/AddNotes
  */
 async function addNote(apiKey: string, apiUrl: string, contactId: number, note: Note): Promise<Note> {
     if (!contactId) {
@@ -323,6 +350,52 @@ async function updateContact(apiKey: string, apiUrl: string, contactId: number, 
     return await request.put(`/Contacts/${contactId}`, JSON.stringify(contact));
 }
 
+async function updateDate(apiKey: string, apiUrl: string, contactId: number, date: InsightlyDate): Promise<InsightlyDate> {
+    if (!contactId) {
+        throw new Error('InsightlyJS: Contact ID is required');
+    }
+    if (!date) {
+        throw new Error('InsightlyJS: Date object is required');
+    }
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+    return await request.put(`/Contacts/${contactId}/Dates`, JSON.stringify(date));
+}
+
+/**
+ * @deprecated - do not use until I can confirm this implementation is correct
+ * @see - https://api.na1.insightly.com/v3.1/#!/Contacts/UpdateImage
+ */
+async function updateImage(apiKey: string, apiUrl: string, contactId: number, fileName: string, image: File): Promise<boolean> {
+    if (!contactId) {
+        throw new Error('InsightlyJS: Contact ID is required');
+    }
+    if (!fileName) {
+        throw new Error('InsightlyJS: File name is required');
+    }
+    if (!image) {
+        throw new Error('InsightlyJS: Image is required');
+    }
+    const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+    return await request.put(`/Contacts/${contactId}/Image/${fileName}`, image);
+}
+
+
+// Documentation for this is unclear
+
+// async function updateLink(apiKey: string, apiUrl: string, contactId: number, linkId: number, link: Link): Promise<Link> {
+//     if (!contactId) {
+//         throw new Error('InsightlyJS: Contact ID is required');
+//     }
+//     if (!linkId) {
+//         throw new Error('InsightlyJS: Link ID is required');
+//     }
+//     if (!link) {
+//         throw new Error('InsightlyJS: Link is required');
+//     }
+//     const request = new InsightlyHTTPRequest(apiKey, apiUrl);
+//     return await request.put(`/Contacts/${contactId}/Links/${linkId}`, JSON.stringify(link));
+// }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // DELETE operations
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -331,12 +404,10 @@ async function deleteContact(apiKey: string, apiUrl: string, contactId: number):
     if (!contactId) {
         throw new Error('InsightlyJS: Contact ID is required');
     }
-    
+
     const request = new InsightlyHTTPRequest(apiKey, apiUrl);
     return await request.delete(`/Contacts/${contactId}`);
 }
-
-
 
 // TODO: add, update, delete operations
 
@@ -357,4 +428,11 @@ export {
     addContact,
     updateContact,
     deleteContact,
+    apiUserFollowContact,
+    addLink,
+    addNote,
+    addTag,
+    updateDate,
+    updateImage,
+    // TODO: there are other functions defined above not exported here
 };
